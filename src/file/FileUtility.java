@@ -252,7 +252,7 @@ public abstract class FileUtility {
             while ((readChars = is.read(c)) != -1) {
                 empty = false;
                 for (int i = 0; i < readChars; ++i) {
-                    if (c[i] == '\n' || c[i] == '\r') {
+                    if (c[i] == '\n') {
                         count++;
                     }
                 }
