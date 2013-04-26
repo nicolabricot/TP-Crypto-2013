@@ -58,46 +58,36 @@ public abstract class FileUtility {
      * @throws IOException
      */
     public static String split(String filePath, int begin, int end) throws FileNotFoundException, IOException {
-        // scan the file to be splitted
-        Scanner scan = new Scanner(new FileReader(filePath));
+        String prefix;
+        try (Scanner scan = new Scanner(new FileReader(filePath))) {
+            if (! new File(tmp).exists())
+                new File(tmp).mkdir();
+            prefix = UUID.randomUUID().toString();
+            FileWriter files[] = new FileWriter[3];
+            for (int i = 0; i < 3; i++)
+                files[i] = new FileWriter(tmp + prefix + "-" + Integer.toString(i + 1) + extension_tmp);
+            int actual = 0;
+            int lines = lines(filePath);
+            String text;
+            while (scan.hasNextLine()) {
+                text = scan.nextLine();
+                // add newline only if this is not the end of the part file
+                if (actual != begin - 1 && actual != end && actual != lines - 1)
+                    text += separator;
 
-        // create temporary directory if not exists
-        if (! new File(tmp).exists())
-            new File(tmp).mkdir();
-        
-        // create the file parts to be completed and initialize them
-        String prefix = UUID.randomUUID().toString();
-        FileWriter files[] = new FileWriter[3];
-        for (int i = 0; i < 3; i++)
-            files[i] = new FileWriter(tmp + prefix + "-" + Integer.toString(i + 1) + extension_tmp);
+                // place text in the right part
+                if (actual < begin)
+                    files[0].append(text);
+                else if (actual > end)
+                    files[2].append(text);
+                else
+                    files[1].append(text);
 
-        // separate the file into three parts
-        int actual = 0;
-        int lines = lines(filePath);
-        String text;
-        while (scan.hasNextLine()) {
-            text = scan.nextLine();
-            // add newline only if this is not the end of the part file
-            if (actual != begin - 1 && actual != end && actual != lines - 1)
-                text += separator;
-
-            // place text in the right part
-            if (actual < begin)
-                files[0].append(text);
-            else if (actual > end)
-                files[2].append(text);
-            else
-                files[1].append(text);
-
-            actual++;
+                actual++;
+            }
+            for (int i = 0; i < 3; i++)
+                files[i].close();
         }
-
-        // close temporary files
-        for (int i = 0; i < 3; i++)
-            files[i].close();
-
-        // close scan
-        scan.close();
 
         // return the temporary files’ prefix
         return prefix;
@@ -114,44 +104,34 @@ public abstract class FileUtility {
      * @throws IOException 
      */
     public static String unaggregate(String filePath, int marker) throws FileNotFoundException, IOException {
-        // scan the file to be splitted
-        Scanner scan = new Scanner(new FileReader(filePath));
+        String prefix;
+        try (Scanner scan = new Scanner(new FileReader(filePath))) {
+            if (! new File(tmp).exists())
+                new File(tmp).mkdir();
+            prefix = UUID.randomUUID().toString();
+            FileWriter files[] = new FileWriter[2];
+            files[0] = new FileWriter(tmp + prefix + "-" + Integer.toString(1) + extension_tmp);
+            files[1] = new FileWriter(tmp + prefix + "-" + Integer.toString(3) + extension_tmp);
+            int actual = 0;
+            int end = lines(filePath) - 2;
+            String text;
+            while (scan.hasNextLine()) {
+                text = scan.nextLine();
+                // add newline only if this is not the end of the part file
+                if (actual != marker-1 && actual != end-1)
+                    text += separator;
+                
+                // place text in the right part
+                if (actual < marker)
+                    files[0].append(text);
+                else if (actual < end)
+                    files[1].append(text);
 
-        // create temporary directory if not exists
-        if (! new File(tmp).exists())
-            new File(tmp).mkdir();
-        
-        // create the file parts to be completed and initialize them
-        String prefix = UUID.randomUUID().toString();
-        FileWriter files[] = new FileWriter[2];
-        files[0] = new FileWriter(tmp + prefix + "-" + Integer.toString(1) + extension_tmp);
-        files[1] = new FileWriter(tmp + prefix + "-" + Integer.toString(3) + extension_tmp);
-
-        // separate the file into two parts
-        int actual = 0;
-        int end = lines(filePath) - 2;
-        String text;
-        while (scan.hasNextLine()) {
-            text = scan.nextLine();
-            // add newline only if this is not the end of the part file
-            if (actual != marker-1 && actual != end-1)
-                text += separator;
-            
-            // place text in the right part
-            if (actual < marker)
-                files[0].append(text);
-            else if (actual < end)
-                files[1].append(text);
-
-            actual++;
+                actual++;
+            }
+            for (int i = 0; i < 2; i++)
+                files[i].close();
         }
-
-        // close temporary files
-        for (int i = 0; i < 2; i++)
-            files[i].close();
-
-        // close scan
-        scan.close();
 
         // return the temporary files’ prefix
         return prefix;
@@ -168,26 +148,22 @@ public abstract class FileUtility {
      */
     public static void aggregate(String prefix, String output) throws FileNotFoundException, IOException {
         Scanner scan;
-        FileWriter out = new FileWriter(output);
-        
-        // add the first part (not crypted)
-        scan = new Scanner(new FileReader(tmp + prefix + "-1" + extension_tmp));
-        while (scan.hasNextLine())
-            out.append(scan.nextLine() + separator);
-        scan.close();
-        out.append(separator);
-        
-        // add the third part (not crypted)
-        scan = new Scanner(new FileReader(tmp + prefix + "-3" + extension_tmp));
-        while (scan.hasNextLine())
-            out.append(scan.nextLine() + separator);
-        scan.close();
-        
-        // write the lines which are encrypted
-        out.append(separator + lines(tmp + prefix + "-1" + extension_tmp));
-        
-        // close open stream
-        out.close();
+        try (FileWriter out = new FileWriter(output)) {
+            scan = new Scanner(new FileReader(tmp + prefix + "-1" + extension_tmp));
+            while (scan.hasNextLine())
+                out.append(scan.nextLine() + separator);
+            scan.close();
+            out.append(separator);
+            
+            // add the third part (not crypted)
+            scan = new Scanner(new FileReader(tmp + prefix + "-3" + extension_tmp));
+            while (scan.hasNextLine())
+                out.append(scan.nextLine() + separator);
+            scan.close();
+            
+            // write the lines which are encrypted
+            out.append(separator + lines(tmp + prefix + "-1" + extension_tmp));
+        }
     }
     
     /**
@@ -201,28 +177,24 @@ public abstract class FileUtility {
      */
     public static void recompose(String prefix, String output) throws IOException {
         Scanner scan;
-        FileWriter out = new FileWriter(output);
-        
-        // add the first part to recompose the initial file
-        scan = new Scanner(new FileReader(tmp + prefix + "-1" + extension_tmp));
-        while (scan.hasNextLine())
-            out.append(scan.nextLine() + separator);
-        scan.close();
-        
-        // add the second part to recompose the initial file
-        scan = new Scanner(new FileReader(tmp + prefix + "-2" + extension_tmp));
-        while (scan.hasNextLine())
-            out.append(separator + scan.nextLine());
-        scan.close();
-        
-        // add the third part to recompose the initial file
-        scan = new Scanner(new FileReader(tmp + prefix + "-3" + extension_tmp));
-        while (scan.hasNextLine())
-            out.append(separator + scan.nextLine());
-        scan.close();
-        
-        // close open stream
-        out.close();
+        try (FileWriter out = new FileWriter(output)) {
+            scan = new Scanner(new FileReader(tmp + prefix + "-1" + extension_tmp));
+            while (scan.hasNextLine())
+                out.append(scan.nextLine() + separator);
+            scan.close();
+            
+            // add the second part to recompose the initial file
+            scan = new Scanner(new FileReader(tmp + prefix + "-2" + extension_tmp));
+            while (scan.hasNextLine())
+                out.append(separator + scan.nextLine());
+            scan.close();
+            
+            // add the third part to recompose the initial file
+            scan = new Scanner(new FileReader(tmp + prefix + "-3" + extension_tmp));
+            while (scan.hasNextLine())
+                out.append(separator + scan.nextLine());
+            scan.close();
+        }
     }
     
     /**
@@ -235,31 +207,27 @@ public abstract class FileUtility {
      * @throws IOException 
      */
     public static String display(String filePath) throws FileNotFoundException, IOException {
-        // scan the file to be displayed
-        Scanner scan = new Scanner(new FileReader(filePath));
-        StringBuilder result = new StringBuilder();
-
-        // separate the file into three parts
-        int actual = 0;
-        int end = lines(filePath) - 2;
-        while (scan.hasNextLine()) {
-            // add text (but not the two last lines, which contains the marker)
-            if (actual < end - 1)
-                result  .append(actual+1)
-                        .append("\t")
-                        .append(scan.nextLine())
-                        .append(separator);
-            else if (actual < end)
-                result  .append(actual+1)
-                        .append("\t")
-                        .append(scan.nextLine());
-            else
-                scan.nextLine();
-            actual++;
+        StringBuilder result;
+        try (Scanner scan = new Scanner(new FileReader(filePath))) {
+            result = new StringBuilder();
+            int actual = 0;
+            int end = lines(filePath) - 2;
+            while (scan.hasNextLine()) {
+                // add text (but not the two last lines, which contains the marker)
+                if (actual < end - 1)
+                    result  .append(actual+1)
+                            .append("\t")
+                            .append(scan.nextLine())
+                            .append(separator);
+                else if (actual < end)
+                    result  .append(actual+1)
+                            .append("\t")
+                            .append(scan.nextLine());
+                else
+                    scan.nextLine();
+                actual++;
+            }
         }
-
-        // close scanner
-        scan.close();
 
         // result
         return result.toString();
