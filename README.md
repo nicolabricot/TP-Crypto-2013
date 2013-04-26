@@ -1,11 +1,10 @@
-# Projet de Sécurité Crypto
+# Projet de Sécurité Crypto ![Application Sécurité Crypto](src/res/icon-black.png) 
 
 __Sujet 6 : chriffrage partiel de fichiers__
 
+Auteurs :
  * Nicolas Devenet
  * Valériane Jean
-
-![Application Sécurité Crypto](src/res/icon-black.png)
 
 ***
 
