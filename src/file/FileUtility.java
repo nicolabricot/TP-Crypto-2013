@@ -211,7 +211,9 @@ public abstract class FileUtility {
         try (Scanner scan = new Scanner(new FileReader(filePath))) {
             result = new StringBuilder();
             int actual = 0;
-            int end = lines(filePath) - 2;
+            int end = lines(filePath);
+            if (new File(filePath).getName().endsWith(extension_file))
+                end -= 2;
             while (scan.hasNextLine()) {
                 // add text (but not the two last lines, which contains the marker)
                 if (actual < end - 1)
