@@ -9,15 +9,3 @@ http://fr.softuses.com/94739
 
 • Créer une file chooser fenêtre
 http://www.zentut.com/java-swing/jfilechooser/
-
----
-sous le coude
----
-• Lire dernière ligne d'un fichier
-http://docs.oracle.com/javase/6/docs/api/java/io/LineNumberReader.html
-
-• Convertir un String en byte[]
-http://www.javadb.com/convert-string-to-byte-array
-
-• Convertir un byte[] en String
-http://www.javadb.com/convert-byte-array-to-string
