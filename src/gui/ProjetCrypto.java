@@ -204,7 +204,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                                     .add(CryptFolderTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 250, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                                     .add(CryptFolderButton))))))
-                .add(0, 120, Short.MAX_VALUE))
+                .add(0, 175, Short.MAX_VALUE))
         );
         CryptPanelLayout.setVerticalGroup(
             CryptPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -243,7 +243,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                 .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(CryptButton)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         TabbedPanel.addTab("Crypt a file", CryptPanel);
@@ -323,7 +323,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                             .add(DecryptCancelFileButton))
                         .add(jSeparator2))
                     .add(jLabel7))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
         DecryptPanelLayout.setVerticalGroup(
             DecryptPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -349,7 +349,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                 .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(DecryptButton)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(177, Short.MAX_VALUE))
         );
 
         TabbedPanel.addTab("Decrypt a file", DecryptPanel);
@@ -408,7 +408,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                                 .add(DisplayButton)
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(DisplayClearButton)))
-                        .add(0, 206, Short.MAX_VALUE)))
+                        .add(0, 236, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         DisplayPanelLayout.setVerticalGroup(
@@ -428,7 +428,7 @@ public class ProjetCrypto extends javax.swing.JFrame {
                     .add(DisplayClearButton))
                 .add(18, 18, 18)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 225, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         TabbedPanel.addTab("Display a file", DisplayPanel);
