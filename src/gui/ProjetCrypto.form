@@ -15,6 +15,9 @@
                 <Property name="action" type="javax.swing.Action" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                   <Connection component="FileMenuQuit" name="getAction" type="method"/>
                 </Property>
+                <Property name="accelerator" type="javax.swing.KeyStroke" editor="org.netbeans.modules.form.editors.KeyStrokeEditor">
+                  <KeyStroke key="Alt+Q"/>
+                </Property>
                 <Property name="mnemonic" type="int" value="81"/>
                 <Property name="text" type="java.lang.String" value="Quit"/>
                 <Property name="toolTipText" type="java.lang.String" value="Quit the application"/>
